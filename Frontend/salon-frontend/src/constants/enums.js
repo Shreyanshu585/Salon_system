@@ -1,0 +1,2 @@
+export const BOOKING_STATUSES = ["PENDING", "CONFIRMED", "CANCELLED"];
+export const PAYMENT_METHODS = ["RAZORPAY", "STRIPE"];

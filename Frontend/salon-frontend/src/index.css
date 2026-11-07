@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root { color-scheme: light; }
+  html.dark { color-scheme: dark; }
+  * { @apply border-ink-200/70 dark:border-ink-700; }
+  html { @apply scroll-smooth; }
+  body {
+    @apply bg-cream text-ink-800 font-sans antialiased dark:bg-ink-950 dark:text-ink-100;
+    background-image: radial-gradient(ellipse at top, rgba(57, 84, 63, 0.05), transparent 55%);
+  }
+  h1, h2, h3, h4 { @apply font-display text-ink-900 dark:text-cream; }
+  ::selection { @apply bg-moss-300/60 text-ink-900; }
+  :focus-visible { @apply outline-none ring-2 ring-moss-500 ring-offset-2 ring-offset-cream dark:ring-offset-ink-950; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-ink-200 dark:bg-ink-700 rounded-full; }
+}
+
+@layer components {
+  .ticket { position: relative; @apply bg-white dark:bg-ink-900 rounded-xl2 shadow-ticket overflow-hidden; }
+  .ticket::before, .ticket::after {
+    content: ""; position: absolute; width: 22px; height: 22px; border-radius: 999px;
+    background: #FBF7F0; top: 50%; transform: translateY(-50%); z-index: 5;
+  }
+  .dark .ticket::before, .dark .ticket::after { background: #100C09; }
+  .ticket::before { left: -11px; }
+  .ticket::after { right: -11px; }
+  .ticket-stub { position: relative; }
+  .ticket-stub::before {
+    content: ""; position: absolute; inset: 0; left: -1px;
+    border-left: 2px dashed rgba(27, 20, 16, 0.15);
+    pointer-events: none;
+  }
+  .dark .ticket-stub::before { border-left-color: rgba(251, 247, 240, 0.18); }
+  .grain { @apply bg-grain pointer-events-none; }
+  .container-page { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .eyebrow { @apply text-xs font-semibold uppercase tracking-[0.18em] text-moss-600 dark:text-moss-300; }
+  .card-surface { @apply bg-white dark:bg-ink-900 border border-ink-100 dark:border-ink-800 rounded-xl2 shadow-soft; }
+  .skeleton { @apply relative overflow-hidden bg-ink-100 dark:bg-ink-800 rounded-lg; }
+  .skeleton::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    animation: shimmer 1.6s infinite linear;
+  }
+  .dark .skeleton::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); }
+}

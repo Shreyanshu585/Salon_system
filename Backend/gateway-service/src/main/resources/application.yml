@@ -1,0 +1,84 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: Gateway-Service
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: false
+
+
+
+          routes:
+           - id: user-service
+             uri: lb://USER-SERVICE
+             predicates:
+                    - Path=/api/users,/api/users/**,/api/admin/users/**,/users/**,/auth/**
+
+
+           - id: salon-service
+             uri: lb://SALON-SERVICE
+             predicates:
+                  - Path=/salons/**,/api/salons/**,/api/admin/salons/**
+
+           - id: service-offering-service
+             uri: lb://SERVICE-OFFERING
+             predicates:
+               - Path=/api/service-offering/**
+
+
+           - id: booking-service
+             uri: lb://BOOKING-SERVICE
+             predicates:
+               - Path=/api/booking/**
+
+
+           - id: payment-service
+             uri: lb://PAYMENT-SERVICE
+             predicates:
+               - Path=/api/payments/**
+
+           - id: review
+             uri: lb://REVIEW
+             predicates:
+               - Path=/api/reviews/**
+
+           - id: notifications-service
+             uri: lb://NOTIFICATIONS-SERVICE
+             predicates:
+               - Path=/api/notifications/**
+
+
+
+           - id: category-service
+             uri: lb://CATEGORY-SERVICE
+             predicates:
+               - Path=/api/categories/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+
+          jwk-set-uri: "http://localhost:8080/realms/master/protocol/openid-connect/certs"
+
+
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8070/eureka/
+
+
+
