@@ -103,7 +103,39 @@ services:
     networks:
       - shreyanshu05
 
+  notificationdb:
+    image: mysql
+    container_name: notificationdb
+    ports:
+      - 3308:3306
+    healthcheck:
+      test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: notificationdb
+    networks:
+      - shreyanshu05
 
+  reviewdb:
+    image: mysql
+    container_name: reviewdb
+    ports:
+        - 3309:3306
+    healthcheck:
+        test: [ "CMD","mysqladmin","ping","-h","localhost" ]
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 10s
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: reviewdb
+    networks:
+        - shreyanshu05
 
   eurekaserver:
     image: "shreyanshu05/salon-eurekaserver:v1"
@@ -308,6 +340,61 @@ services:
           memory: 700m
     networks:
       - shreyanshu05
+
+  notification:
+    image: "shreyanshu05/salon-notification:v1"
+    ports:
+      - "6008:8067"
+    healthcheck:
+      test: "curl --fail --silent notification:8067/actuator/health/readiness | grep up || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: notification
+    depends_on:
+      notificationdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "notification-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://notificationdb:3306/notificationdb"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - shreyanshu05
+
+  review:
+    image: "shreyanshu05/salon-review:v1"
+    ports:
+      - "6008:8068"
+    healthcheck:
+      test: "curl --fail --silent review:8068/actuator/health/readiness | grep up || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    container_name: review
+    depends_on:
+      reviewdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "review-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://reviewdb:3306/reviewdb"
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - shreyanshu05
+
 
 
 networks:
