@@ -1,3 +1,22 @@
+#server:
+#  port: 8070
+#
+#spring:
+#  application:
+#    name: Eureka-service
+#
+#eureka:
+#  instance:
+#    hostname: localhost
+#
+#  client:
+#    register-with-eureka: false
+#    fetch-registry: false
+#
+#    service-url:
+#      defaultZone: http://localhost:8070/eureka/
+
+
 server:
   port: 8070
 
@@ -7,11 +26,11 @@ spring:
 
 eureka:
   instance:
-    hostname: localhost
+    hostname: ${RENDER_EXTERNAL_HOSTNAME:localhost}
 
   client:
     register-with-eureka: false
     fetch-registry: false
 
     service-url:
-      defaultZone: http://localhost:8070/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
